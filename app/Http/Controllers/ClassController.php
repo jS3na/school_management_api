@@ -27,19 +27,23 @@ class ClassController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ], [
+            'name.required' => 'The name is required.',
+        ]);
+
+        $name = $request->input('name');
+
+        $class = new ClassM();
+        $class->name = $name;
+        $class->save();
+
+        return ApiResponse::success($class);
     }
 
     /**
@@ -47,17 +51,9 @@ class ClassController extends Controller
      */
     public function show(string $id)
     {
-        $class = ClassM::find($id);
+        $class = ClassM::with('students')->find($id);
 
-        return ApiResponse::success($class);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return $class ? ApiResponse::success($class) : ApiResponse::notFound('Class not found.');
     }
 
     /**
@@ -65,7 +61,22 @@ class ClassController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $class = ClassM::find($id);
+
+        if (!$class) return ApiResponse::notFound("Class not found.");
+
+        $request->validate([
+            'name' => 'required',
+        ], [
+            'name.required' => 'The name is required.'
+        ]);
+
+        $name = $request->input('name');
+
+        $class->name = $name;
+        $class->save();
+
+        return ApiResponse::success($class);
     }
 
     /**
@@ -73,6 +84,14 @@ class ClassController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $class = ClassM::find($id);
+    
+        if (!$class) {
+            return ApiResponse::notFound('Class not found.');
+        }
+    
+        $class->delete();
+    
+        return ApiResponse::success($class);
     }
 }

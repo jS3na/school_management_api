@@ -31,7 +31,7 @@ class TeacherController extends Controller
         ], [
             'user_id.required' => 'The user is required.',
             'salary.required' => 'The salary is required.',
-            'salary.numeric' => 'The salary is numeric.'
+            'salary.numeric' => 'The salary must be a numeric.'
         ]);
 
         $user_id = $request->input('user_id');
@@ -73,7 +73,7 @@ class TeacherController extends Controller
             'salary' => 'required|numeric',
         ], [
             'salary.required' => 'The salary is required.',
-            'salary.numeric' => 'The salary is numeric.'
+            'salary.numeric' => 'The salary must be a numeric.'
         ]);
 
         $salary = $request->input('salary');

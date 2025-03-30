@@ -30,12 +30,13 @@ class StudentController extends Controller
             'user_id' => 'required',
             'birth_date' => 'required',
             'address' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|numeric',
             'guardian' => 'required'
         ], [
             'user_id.required' => 'The user is required.',
             'birth_date.required' => 'The birth date is required.',
-            'phone.required' => 'The address is required.',
+            'phone.required' => 'The phone is required.',
+            'phone.numeric' => 'The phone must be a numeric.',
             'address.required' => 'The address is required.',
             'guardian.required' => 'The guardian is required.',
         ]);
@@ -48,7 +49,7 @@ class StudentController extends Controller
         $guardian = $request->input('guardian');
 
         if (Student::where('user_id', $user_id)->first()) return ApiResponse::error('Student already exists.');
-
+        
         if (!User::where('id', $user_id)->first()) return ApiResponse::notFound("User not found.");
 
         if ($class_id && !ClassM::where('id', $class_id)->first()) return ApiResponse::notFound("Class not found.");
@@ -92,7 +93,8 @@ class StudentController extends Controller
             'guardian' => 'required'
         ], [
             'birth_date.required' => 'The birth date is required.',
-            'phone.required' => 'The address is required.',
+            'phone.required' => 'The phone is required.',
+            'phone.numeric' => 'The phone must be a numeric.',
             'address.required' => 'The address is required.',
             'guardian.required' => 'The guardian is required.',
         ]);
