@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassM;
+use App\Models\Subject;
 use App\Services\ApiResponse;
 use Illuminate\Http\Request;
 
-class ClassController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $classes = ClassM::all();
+        $subjects = Subject::all();
 
-        return ApiResponse::success($classes);
+        return ApiResponse::success($subjects);
     }
 
     /**
@@ -32,11 +32,11 @@ class ClassController extends Controller
 
         $name = $request->input('name');
 
-        $class = new ClassM();
-        $class->name = $name;
-        $class->save();
+        $subject = new Subject();
+        $subject->name = $name;
+        $subject->save();
 
-        return ApiResponse::success($class);
+        return ApiResponse::success($subject);
     }
 
     /**
@@ -44,9 +44,9 @@ class ClassController extends Controller
      */
     public function show(string $id)
     {
-        $class = ClassM::with('students')->find($id);
+        $subject = Subject::find($id);
 
-        return $class ? ApiResponse::success($class) : ApiResponse::notFound('Class not found.');
+        return $subject ? ApiResponse::success($subject) : ApiResponse::notFound('Subject not found.');
     }
 
     /**
@@ -54,22 +54,23 @@ class ClassController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $class = ClassM::find($id);
 
-        if (!$class) return ApiResponse::notFound("Class not found.");
+        $subject = Subject::find($id);
+
+        if (!$subject) return ApiResponse::notFound("Subject not found.");
 
         $request->validate([
             'name' => 'required',
         ], [
-            'name.required' => 'The name is required.'
+            'name.required' => 'The name is required.',
         ]);
 
         $name = $request->input('name');
 
-        $class->name = $name;
-        $class->save();
+        $subject->name = $name;
+        $subject->save();
 
-        return ApiResponse::success($class);
+        return ApiResponse::success($subject);
     }
 
     /**
@@ -77,14 +78,14 @@ class ClassController extends Controller
      */
     public function destroy(string $id)
     {
-        $class = ClassM::find($id);
+        $subject = Subject::find($id);
     
-        if (!$class) {
-            return ApiResponse::notFound('Class not found.');
+        if (!$subject) {
+            return ApiResponse::notFound('Subject not found.');
         }
     
-        $class->delete();
+        $subject->delete();
     
-        return ApiResponse::success($class);
+        return ApiResponse::success($subject);
     }
 }
